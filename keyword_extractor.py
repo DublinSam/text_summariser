@@ -26,11 +26,22 @@ def filter_tokens(tokens):
 	"""takes as input a list of string tokens and removes stop
 	words and common punctuation before returning the cleaned list."""
 	tokens = list(set(tokens))
-	punctuation = [",", ".", "'s", "``", "''", "$", "said"]
+	punctuation = [",", ".", "'s", "``", "''", "$"]
 	stop_words = stopwords.words('english')
 	tokens = [token for token in tokens if token.lower() not in stop_words]
 	tokens = [token for token in tokens if token not in punctuation]
+	tokens = nounify(tokens)
 	return tokens
+
+def nounify(tokens):
+	"""takes as input a list of tokens and returns only those that are 
+	nouns."""
+	nouns = []
+	tagged_tokens = nltk.pos_tag(tokens)
+	for pair in tagged_tokens:
+		if pair[1] == 'NN':
+			nouns.append(pair[0])
+	return nouns
 
 def get_indices(target, my_list):
 	"""returns all indices of a target element in a list as a
