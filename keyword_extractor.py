@@ -10,7 +10,8 @@ from nltk.corpus import stopwords
 import scipy as sp
 import numpy as np
 import scipy.spatial as spatial
-from graph_utils import Graph
+from filter_utils import filter_tokens
+from keyword_graph import KeywordGraph
 
 def get_tokens(filename):
 	"""returns a dictionary of the raw and filtered string tokens retrieved
@@ -21,27 +22,6 @@ def get_tokens(filename):
 	tokens['raw'] = nltk.word_tokenize(input_text)
 	tokens['filtered'] = filter_tokens(tokens['raw'])
 	return tokens
-
-def filter_tokens(tokens):
-	"""takes as input a list of string tokens and removes stop
-	words and common punctuation before returning the cleaned list."""
-	tokens = list(set(tokens))
-	punctuation = [",", ".", "'s", "``", "''", "$"]
-	stop_words = stopwords.words('english')
-	tokens = [token for token in tokens if token.lower() not in stop_words]
-	tokens = [token for token in tokens if token not in punctuation]
-	tokens = nounify(tokens)
-	return tokens
-
-def nounify(tokens):
-	"""takes as input a list of tokens and returns only those that are 
-	nouns."""
-	nouns = []
-	tagged_tokens = nltk.pos_tag(tokens)
-	for pair in tagged_tokens:
-		if pair[1] == 'NN':
-			nouns.append(pair[0])
-	return nouns
 
 def get_indices(target, my_list):
 	"""returns all indices of a target element in a list as a
@@ -61,11 +41,11 @@ def window_check(t1, t2, my_list, N):
 
 def find_keywords(filename, num_keywords, window_length=5, initial_score=1):
 	tokens = get_tokens(filename)
-	graph =  Graph(tokens['filtered'], tokens['raw'], window_check, window_length, initial_score)
+	graph =  KeywordGraph(tokens['filtered'], tokens['raw'], window_check, window_length, initial_score)
 	graph.run_text_rank()
 	scores = {}
-	for node in graph.text_graph:
-		scores[node] = graph.text_graph[node]["score"]
+	for node in graph.word_graph:
+		scores[node] = graph.word_graph[node]["score"]
 	keywords = sorted(scores, key=scores.get, reverse=True)[:num_keywords]
 	return keywords
 	

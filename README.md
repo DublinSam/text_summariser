@@ -8,6 +8,6 @@ It contains modules for summarising text at both the keyword and sentence level.
 
 or 
 
-    python3 keysentence_extractor.py
+    python3 sentence_extractor.py
 
 ---
