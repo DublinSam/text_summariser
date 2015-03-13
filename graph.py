@@ -1,6 +1,5 @@
 """The graph module provides the Graph base class for text manipulation, together
 with the implementation of the TextRank algorithm.
-author: Sam Albanie
 """
 class Graph:
 
