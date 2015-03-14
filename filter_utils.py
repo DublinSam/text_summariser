@@ -18,6 +18,6 @@ def nounify(tokens):
 	nouns = []
 	tagged_tokens = nltk.pos_tag(tokens)
 	for pair in tagged_tokens:
-		if pair[1] == 'NN':
+		if pair[1] == 'NN' or pair[1] == 'NNP':
 			nouns.append(pair[0])
 	return nouns
